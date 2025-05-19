@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.5">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;ACLS 記錄工具&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body { font-family: Arial, sans-serif; padding: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>button { margin: 5px; padding: 10px 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#log { margin-top: 20px; white-space: pre-line; border-top: 1px solid #ccc; padding-top: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h2&gt;ACLS 記錄工具&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;button onclick="recordEvent('CPR 開始')"&gt;Start CPR&lt;/button&gt;</p>
+<p class="p1">&lt;button onclick="aedAnalyze()"&gt;AED Analyze&lt;/button&gt;</p>
+<p class="p1">&lt;button onclick="recordEvent('Epinephrine 給藥')"&gt;Epinephrine&lt;/button&gt;</p>
+<p class="p1">&lt;button onclick="recordEvent('Amiodarone 給藥')"&gt;Amiodarone&lt;/button&gt;</p>
+<p class="p1">&lt;button onclick="switchCPR()"&gt;Switch CPR&lt;/button&gt;</p>
+<p class="p1">&lt;button onclick="recordEvent('ROSC')"&gt;ROSC&lt;/button&gt;</p>
+<p class="p1">&lt;button onclick="resetLog()"&gt;Reset&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div id="log"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let startTime = null;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let cprSwitchTimer = null;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function getCurrentTime() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return new Date();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function formatTimeDiff(ms) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let totalSeconds = Math.floor(ms / 1000);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let seconds = String(totalSeconds % 60).padStart(2, '0');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return `${minutes}:${seconds}`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function recordEvent(event) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const now = getCurrentTime();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (!startTime) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>startTime = now;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const elapsed = formatTimeDiff(now - startTime);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const log = document.getElementById("log");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>log.innerText += `[${elapsed}] ${event}\n`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function aedAnalyze() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>recordEvent("AED 分析開始（倒數 10 秒）");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>recordEvent("AED 分析結束");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}, 10000);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function switchCPR() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>recordEvent("CPR 換人");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (cprSwitchTimer) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>clearTimeout(cprSwitchTimer);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cprSwitchTimer = setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>alert("提醒：2 分鐘已到，建議 CPR 換人！");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}, 120000);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function resetLog() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (confirm("確定要清除所有紀錄？")) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("log").innerText = "";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>startTime = null;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (cprSwitchTimer) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>clearTimeout(cprSwitchTimer);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
